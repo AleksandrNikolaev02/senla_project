@@ -1,0 +1,35 @@
+spring:
+  application:
+    name: final_project
+  datasource:
+    url: "jdbc:postgresql://localhost:5432/project"
+    username: postgres
+    password: 1234
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 25
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
+  jpa:
+    hibernate:
+      ddl-auto: none
+  data:
+    redis:
+      host: redis
+      port: 6379
+  cache:
+    type: redis
+    redis:
+      time-to-live: 3600s
+file:
+  dir: uploads
+jwt:
+  secret_key: 53A73E5F1C4E0A2D3B5F2D784E6A1B423D6F247D1F6E5C3A596D635A75327855
+minio:
+  server:
+    url: http://minio:9000
+    access_key: minio
+    secret_key: minio123
+    port: 9000
