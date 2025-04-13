@@ -1,0 +1,15 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: "prometheus"
+    static_configs:
+      - targets: ['localhost:9090']
+
+  - job_name: 'spring-actuator'
+    metrics_path: '/actuator/prometheus'
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['172.23.6.13:8080', '172.23.6.13:8081', '172.23.6.13:8083']
+    bearer_token: eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJQcm9qZWN0Iiwic3ViIjoiYWRtaW5AbWFpbC5ydSIsInJvbGUiOiJBRE1JTiIsImlkIjoxLCJleHAiOjE3NzA2Mzc0MDQsImlhdCI6MTczOTEwMTQwNH0.bR-N-fUFKUb-FyHRc76gjKM-Lot6bCqXU0ZcHEG2wTI

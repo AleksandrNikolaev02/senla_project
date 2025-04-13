@@ -4,8 +4,8 @@ services:
   app:
     image: app
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: ./app
+      dockerfile: app/Dockerfile
     ports:
       - "8080:8080"
     environment:
@@ -19,6 +19,43 @@ services:
       - db
       - minio
       - redis
+      - kafka
+    networks:
+      my-network:
+
+  file_service:
+    image: file_service
+    build:
+      context: ./file_service
+      dockerfile: file_service/Dockerfile
+    ports:
+    - "8081:8081"
+    environment:
+      MINIO_ENDPOINT: http://minio:9000
+    depends_on:
+      - db
+      - minio
+      - redis
+      - kafka
+    networks:
+      my-network:
+
+  email_service:
+    image: email_service
+    build:
+      context: ./email_service
+      dockerfile: email_service/Dockerfile
+    ports:
+      - "8083:8083"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/email
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: 1234
+    depends_on:
+      - db
+      - minio
+      - redis
+      - kafka
     networks:
       my-network:
 
@@ -26,14 +63,13 @@ services:
     image: postgres:latest
     restart: always
     environment:
-      POSTGRES_DB: project
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 1234
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./schema.sql:/docker-entrypoint-initdb.d/schema.sql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       my-network:
 
@@ -67,10 +103,50 @@ services:
     networks:
       my-network:
 
+  zookeeper:
+    image: 'bitnami/zookeeper:latest'
+    container_name: zookeeper
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+    ports:
+      - '2181:2181'
+    networks:
+      my-network:
+
+  kafka:
+    image: 'bitnami/kafka:latest'
+    container_name: kafka
+    environment:
+      - KAFKA_BROKER_ID=1
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT_INTERNAL://kafka:9092,PLAINTEXT_EXTERNAL://172.23.6.13:9092
+      - KAFKA_LISTENERS=PLAINTEXT_INTERNAL://0.0.0.0:9092,PLAINTEXT_EXTERNAL://0.0.0.0:9093
+      - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=PLAINTEXT_INTERNAL:PLAINTEXT,PLAINTEXT_EXTERNAL:PLAINTEXT
+      - KAFKA_INTER_BROKER_LISTENER_NAME=PLAINTEXT_INTERNAL
+      - KAFKA_AUTO_CREATE_TOPICS_ENABLE=true
+      - ALLOW_PLAINTEXT_LISTENER=yes
+    depends_on:
+      - zookeeper
+    ports:
+      - '9092:9092'
+      - '9093:9093'
+    volumes:
+      - kafka_data:/bitnami/kafka
+    networks:
+      my-network:
+
+  prometheus:
+    image: prom/prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+
 volumes:
   postgres_data:
   minio_data:
   redis_data:
+  kafka_data:
 
 networks:
   my-network:

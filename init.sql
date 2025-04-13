@@ -1,0 +1,2 @@
+CREATE DATABASE project;
+CREATE DATABASE email;

@@ -1,0 +1,63 @@
+server:
+  port: 8081
+
+spring:
+  datasource:
+    url: jdbc:disabled
+  kafka:
+    bootstrap-servers: kafka:9092
+    consumer:
+      group-id: file-service-group
+      auto-offset-reset: earliest
+      enable-auto-commit: true
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      compression-type: gzip
+    properties:
+      spring.json.trusted.packages: "*"
+      max.request.size: 5242880
+      buffer.memory: 5242880
+
+file:
+  dir: uploads
+minio:
+  server:
+    url: http://minio:9000
+    access_key: minio
+    secret_key: minio123
+    port: 9000
+
+logging:
+  level:
+    org.springframework: INFO
+    org.apache.kafka: INFO
+    org.springframework.kafka: INFO
+
+topics:
+  delete-file-request: delete-file-request
+  get-file-request: get-file-request
+  file-events: file-events
+  get-file-reply: get-file-reply
+  file-answers: file-answers
+  file-responses: file-responses
+
+metrics:
+  error-minio-service-metric: error_minio_service_metric
+  success-minio-service-metric: success_minio_service_metric
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - prometheus
+          - health
+          - info
+          - metrics
+  prometheus:
+    metrics:
+      export:
+        enabled: true

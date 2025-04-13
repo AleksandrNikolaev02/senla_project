@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+    <changeSet author="admin" id="init-base-db-schema">
+        <createTable tableName="users">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints primaryKey="true"/>
+            </column>
+
+            <column name="fname" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="sname" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="email" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="password" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="role" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="courses">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints primaryKey="true"/>
+            </column>
+
+            <column name="title" type="varchar">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="description" type="varchar">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="teacher_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="course_users">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints primaryKey="true"/>
+            </column>
+
+            <column name="course_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="user_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="artifacts">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints primaryKey="true"/>
+            </column>
+
+            <column name="title" type="varchar"/>
+
+            <column name="content" type="varchar"/>
+
+            <column name="course_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="type" type="varchar(50)"/>
+        </createTable>
+
+        <createTable tableName="answers">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints primaryKey="true"/>
+            </column>
+
+            <column name="artifact_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="user_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="sub_date" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="content" type="varchar"/>
+
+            <column name="course_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="type" type="varchar(30)"/>
+
+            <column name="status" type="varchar(30)"/>
+        </createTable>
+
+        <createTable tableName="grades">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints primaryKey="true"/>
+            </column>
+
+            <column name="grade" type="smallint">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="user_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="course_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="artifact_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="messages">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints primaryKey="true"/>
+            </column>
+
+            <column name="sender_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="recipient_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="content" type="varchar">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="created_at" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <rollback>
+            <dropTable tableName="users"/>
+            <dropTable tableName="courses"/>
+            <dropTable tableName="course_users"/>
+            <dropTable tableName="artifacts"/>
+            <dropTable tableName="answers"/>
+            <dropTable tableName="grades"/>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="init-base-fk-keys" author="admin">
+        <addForeignKeyConstraint
+                baseTableName="courses"
+                baseColumnNames="teacher_id"
+                constraintName="fk_teacher"
+                referencedTableName="users"
+                referencedColumnNames="id"
+                onDelete="NO ACTION"
+                onUpdate="NO ACTION"/>
+
+        <addForeignKeyConstraint
+                baseTableName="course_users"
+                baseColumnNames="course_id"
+                constraintName="fk_course"
+                referencedTableName="courses"
+                referencedColumnNames="id"
+                onDelete="CASCADE"
+                onUpdate="CASCADE"/>
+
+        <addForeignKeyConstraint
+                baseTableName="course_users"
+                baseColumnNames="user_id"
+                constraintName="fk_user"
+                referencedTableName="users"
+                referencedColumnNames="id"
+                onDelete="CASCADE"
+                onUpdate="CASCADE"/>
+
+        <addForeignKeyConstraint
+                baseTableName="artifacts"
+                baseColumnNames="course_id"
+                constraintName="fk_course"
+                referencedTableName="courses"
+                referencedColumnNames="id"
+                onDelete="RESTRICT"
+                onUpdate="CASCADE"/>
+
+        <addForeignKeyConstraint
+                baseTableName="answers"
+                baseColumnNames="artifact_id"
+                constraintName="fk_artifact"
+                referencedTableName="artifacts"
+                referencedColumnNames="id"
+                onDelete="RESTRICT"
+                onUpdate="CASCADE"/>
+
+        <addForeignKeyConstraint
+                baseTableName="answers"
+                baseColumnNames="course_id"
+                constraintName="fk_course"
+                referencedTableName="courses"
+                referencedColumnNames="id"
+                onDelete="RESTRICT"
+                onUpdate="CASCADE"/>
+
+        <addForeignKeyConstraint
+                baseTableName="answers"
+                baseColumnNames="user_id"
+                constraintName="fk_user"
+                referencedTableName="users"
+                referencedColumnNames="id"
+                onDelete="RESTRICT"
+                onUpdate="CASCADE"/>
+
+
+        <addForeignKeyConstraint
+                baseTableName="grades"
+                baseColumnNames="artifact_id"
+                constraintName="fk_artifact"
+                referencedTableName="artifacts"
+                referencedColumnNames="id"
+                onDelete="RESTRICT"
+                onUpdate="CASCADE"/>
+
+        <addForeignKeyConstraint
+                baseTableName="grades"
+                baseColumnNames="course_id"
+                constraintName="fk_course"
+                referencedTableName="courses"
+                referencedColumnNames="id"
+                onDelete="RESTRICT"
+                onUpdate="CASCADE"/>
+
+        <addForeignKeyConstraint
+                baseTableName="grades"
+                baseColumnNames="user_id"
+                constraintName="fk_student"
+                referencedTableName="users"
+                referencedColumnNames="id"
+                onDelete="CASCADE"
+                onUpdate="CASCADE"/>
+
+        <addForeignKeyConstraint
+                baseTableName="messages"
+                baseColumnNames="recipient_id"
+                constraintName="fk_recipient"
+                referencedTableName="users"
+                referencedColumnNames="id"
+                onDelete="RESTRICT"
+                onUpdate="RESTRICT"/>
+
+        <addForeignKeyConstraint
+                baseTableName="messages"
+                baseColumnNames="sender_id"
+                constraintName="fk_sender"
+                referencedTableName="users"
+                referencedColumnNames="id"
+                onDelete="RESTRICT"
+                onUpdate="RESTRICT"/>
+    </changeSet>
+</databaseChangeLog>

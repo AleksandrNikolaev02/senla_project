@@ -1,5 +1,6 @@
+HELP.md
 target/
-.mvn/
+!.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
 
@@ -30,9 +31,3 @@ build/
 
 ### VS Code ###
 .vscode/
-
-### errors file ###
-errors.log
-
-### upload files ###
-app/src/main/resources/static/uploads

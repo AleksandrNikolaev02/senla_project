@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <include file="db/changelog/changes/init/init-base-db-schema.xml"/>
+
+    <include file="db/changelog/changes/create-role-table-202412101431.xml"/>
+    <include file="db/changelog/changes/add-role-id-to-users-202412101517.xml"/>
+    <include file="db/changelog/changes/insert-roles-in-table-202412111739.xml"/>
+    <include file="db/changelog/changes/remove-role-column-from-users-202412111802.xml"/>
+    <include file="db/changelog/changes/create-refresh-token-table-2025-01-02.xml"/>
+    <include file="db/changelog/changes/add-token-id-to-users-2025-01-02.xml"/>
+    <include file="db/changelog/changes/update-foreign-key-in-users-table-2025-01-03.xml"/>
+    <include file="db/changelog/changes/create-settings-table-2025-02-08.xml"/>
+</databaseChangeLog>

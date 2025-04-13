@@ -1,0 +1,71 @@
+server:
+  port: 8083
+
+spring:
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username:
+    password:
+    properties:
+      mail:
+        smtp:
+          starttls:
+            enable: true
+          auth: true
+  datasource:
+    url: "jdbc:postgresql://localhost:5432/email"
+    username: postgres
+    password: 1234
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 25
+  liquibase:
+    change-log: classpath:/db/changelog/changelog-master.xml
+  kafka:
+    bootstrap-servers: kafka:9092
+    consumer:
+      group-id: file-service-group
+      auto-offset-reset: earliest
+      enable-auto-commit: true
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      compression-type: gzip
+    properties:
+      spring.json.trusted.packages: "*"
+      max.request.size: 5242880
+      buffer.memory: 5242880
+
+logging:
+  level:
+    org.springframework: INFO
+    org.apache.kafka: INFO
+    org.springframework.kafka: INFO
+
+topics:
+  email-request: email-request
+  get-email: get-email
+  get-email-reply: get-email-reply
+
+scheduled:
+  time-clean-db: 10000
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - prometheus
+          - health
+          - info
+          - metrics
+  prometheus:
+    metrics:
+      export:
+        enabled: true
+  metrics:
+    enable:
+      all: true
