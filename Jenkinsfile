@@ -9,31 +9,32 @@ pipeline {
             }
         }
 
-        stage('Build library') {
+        stage('Build') {
             steps {
-                sh 'cd ./common-dto/'
-                sh 'mvn clean install'
-            }
-        }
-
-        stage('Build modules') {
-            parallel {
-                stage('Build app') {
-                    steps {
-                        sh 'cd ./app/'
-                        sh 'mvn clean package'
-                    }
+                dir('common-dto') {
+                    sh 'mvn clean install'
                 }
-                stage('Build email_service') {
-                    steps {
-                        sh 'cd ./email_service/'
-                        sh 'mvn clean package'
+                parallel {
+                    stage('Build App') {
+                        steps {
+                            dir('app') {
+                                sh 'mvn clean package'
+                            }
+                        }
                     }
-                }
-                stage('Build file_service') {
-                    steps {
-                        sh 'cd ./file_service/'
-                        sh 'mvn clean package'
+                    stage('Build File Service') {
+                        steps {
+                            dir('file_service') {
+                                sh 'mvn clean package'
+                            }
+                        }
+                    }
+                    stage('Build Email Service') {
+                        steps {
+                            dir('email_service') {
+                                sh 'mvn clean package'
+                            }
+                        }
                     }
                 }
             }
