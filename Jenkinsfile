@@ -12,27 +12,27 @@ pipeline {
         stage('Build') {
             steps {
                 dir('common-dto') {
-                    sh 'mvn clean install'
+                    sh 'mvn clean install -pl common-dto -am'
                 }
                 parallel {
                     stage('Build App') {
                         steps {
                             dir('app') {
-                                sh 'mvn clean package'
+                                sh 'mvn clean package -pl app'
                             }
                         }
                     }
                     stage('Build File Service') {
                         steps {
                             dir('file_service') {
-                                sh 'mvn clean package'
+                                sh 'mvn clean package -pl file_service'
                             }
                         }
                     }
                     stage('Build Email Service') {
                         steps {
                             dir('email_service') {
-                                sh 'mvn clean package'
+                                sh 'mvn clean package -pl email_service'
                             }
                         }
                     }
