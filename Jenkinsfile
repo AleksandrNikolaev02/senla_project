@@ -25,7 +25,7 @@ pipeline {
                 stage('Build App') {
                     steps {
                         dir('app') {
-                            sh 'mvn clean package -pl app'
+                            sh 'mvn clean package'
                         }
                     }
                 }
@@ -33,7 +33,7 @@ pipeline {
                 stage('Build File Service') {
                     steps {
                         dir('file_service') {
-                            sh 'mvn clean package -pl file_service'
+                            sh 'mvn clean package'
                         }
                     }
                 }
@@ -41,7 +41,7 @@ pipeline {
                 stage('Build Email Service') {
                     steps {
                         dir('email_service') {
-                            sh 'mvn clean package -pl email_service'
+                            sh 'mvn clean package'
                         }
                     }
                 }
