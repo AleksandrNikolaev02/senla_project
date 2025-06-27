@@ -36,3 +36,6 @@ errors.log
 
 ### upload files ###
 app/src/main/resources/static/uploads
+
+### password for Jenkins ###
+initialAdminPassword
