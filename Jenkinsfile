@@ -9,36 +9,42 @@ pipeline {
             }
         }
 
-        stage('Build') {
+        stage('Build Common DTO') {
             steps {
                 dir('common-dto') {
-                    sh 'mvn clean install -pl common-dto -am'
+                    sh 'mvn clean install'
                 }
-                parallel {
-                    stage('Build App') {
-                        steps {
-                            dir('app') {
-                                sh 'mvn clean package -pl app'
-                            }
+            }
+        }
+
+        stage('Build modules') {
+            parallel {
+                stage('Build App') {
+                    steps {
+                        dir('app') {
+                            sh 'mvn clean package -pl app'
                         }
                     }
-                    stage('Build File Service') {
-                        steps {
-                            dir('file_service') {
-                                sh 'mvn clean package -pl file_service'
-                            }
+                }
+
+                stage('Build File Service') {
+                    steps {
+                        dir('file_service') {
+                            sh 'mvn clean package -pl file_service'
                         }
                     }
-                    stage('Build Email Service') {
-                        steps {
-                            dir('email_service') {
-                                sh 'mvn clean package -pl email_service'
-                            }
+                }
+
+                stage('Build Email Service') {
+                    steps {
+                        dir('email_service') {
+                            sh 'mvn clean package -pl email_service'
                         }
                     }
                 }
             }
         }
+
     }
 
     post {
