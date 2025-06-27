@@ -11,9 +11,8 @@ pipeline {
 
         stage('Build library') {
             steps {
-                dir('./common-dto') {
-                    sh 'mvn clean install'
-                }
+                sh 'cd ./common-dto/'
+                sh 'mvn clean install'
             }
         }
 
@@ -21,23 +20,20 @@ pipeline {
             parallel {
                 stage('Build app') {
                     steps {
-                        dir('./common-dto') {
-                            sh 'mvn clean package'
-                        }
+                        sh 'cd ./app/'
+                        sh 'mvn clean package'
                     }
                 }
                 stage('Build email_service') {
                     steps {
-                        dir('./email_service') {
-                            sh 'mvn clean package'
-                        }
+                        sh 'cd ./email_service/'
+                        sh 'mvn clean package'
                     }
                 }
                 stage('Build file_service') {
                     steps {
-                        dir('./file_service') {
-                            sh 'mvn clean package'
-                        }
+                        sh 'cd ./file_service/'
+                        sh 'mvn clean package'
                     }
                 }
             }
