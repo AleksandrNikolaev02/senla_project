@@ -48,6 +48,18 @@ pipeline {
             }
         }
 
+        stage('Build and Deploy') {
+            steps {
+                script {
+                    dir('common-dto') {
+                        sh 'mvn clean install'
+                    }
+
+                    sh 'docker compose down --remove-orphans'
+                    sh 'docker compose up --build -d'
+                }
+            }
+        }
     }
 
     post {
