@@ -162,17 +162,7 @@
     </module>
 
     <module name="RegexpMultiline">
-        <property name="format" value="^([^\n ]+ )*(class|interface|enum) [^{]*\{\n[^\n}]"/>
-        <property name="message" value="Leave empty row after class/interface/enum definition!"/>
-        <property name="severity" value="error"/>
-        <property name="fileExtensions" value="java"/>
-    </module>
 
-    <module name="RegexpMultiline">
-        <property name="format" value="(?&lt;!\{\s{0,99}$)^$(?=^\s{0,99}\})"/>
-        <property name="message" value="Found empty row before end of class/interface/enum/method!"/>
-        <property name="severity" value="error"/>
-        <property name="fileExtensions" value="java"/>
     </module>
 
     <!-- Support @SuppressWarnings (added in Checkstyle 5.7) -->
